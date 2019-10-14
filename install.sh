@@ -1,10 +1,16 @@
 #!/bin/bash
-echo 'Installing...'
+echo 'Begin installing...'
 
 # 安装软件
 Install_DosBox()
-{
-  # Check OS
+{   
+    echo  '=> dosbox: '`which dosbox`
+    if [ $? -eq 0 ];then
+      echo '=> DosBox has been installed'
+      return
+    fi
+
+    # Check OS
     if grep -Eqii "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
         DISTRO='CentOS'
         PM='yum'
@@ -39,10 +45,10 @@ Install_DosBox()
     
     if [ $DISTRO == 'Unknow' ];
     then
-      echo '[Warning]: Please install DosBox by yourself!'
+      echo '=> [Warning]: Please install DosBox by yourself!'
     fi
 
-    echo 'Installing DosBox ...'
+    echo '<= Installing DosBox ...'
     if [ $PM == 'pacman'  ];
     then
       sudo $PM -Sy dosbox
@@ -53,19 +59,24 @@ Install_DosBox()
 }
 
 # install config
-Install_Dependent(){
+Config_Dependent(){
+  conf_name='dosbox-0.74.conf'
   mkdir -p ~/ms-dos
+  
+  echo '=> The default config: '
+  conf_name=$(ls ~/.dosbox)
+  echo $conf_name
 
   cp -rf ./ASM ~/ms-dos/
   cp -rf ./FILE ~/ms-dos/ 
   cp -rf ./MASM ~/ms-dos/ 
   cp -rf ./VIM ~/ms-dos/ 
 
-  cp -f ~/.dosbox/dosbox-0.74.conf ./config/dosbox.config.bak
-  cp -f ./config/dosbox.conf ~/.dosbox/dosbox-0.74.conf
+  cp -f ~/.dosbox/dosbox-*.conf ./config/dosbox.conf.bak
+  cp -f ./config/dosbox.conf ~/.dosbox/$conf_name
 }
 
 Install_DosBox
-Install_Dependent
+Config_Dependent
 
-echo 'Install Success!'
+echo '=> Install Success!'

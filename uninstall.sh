@@ -2,6 +2,11 @@
 
 rm -rf ~/ms-dos
 
-cp -f ./config/dosbox.config.bak ~/.dosbox/dosbox-0.74.conf
+echo '=> The default config: '
+conf_name=$(ls ~/.dosbox)
+echo $conf_name
 
 
+cp -f ./config/dosbox.conf.bak ~/.dosbox/$conf_name
+
+echo '=> Uninstall success!!'
